@@ -17,7 +17,7 @@ mp_drawing_styles = mp.solutions.drawing_styles
 hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.5)
 
 # Dictionary for the classification
-labels_dict = {0: 'Thumbs Up', 1: 'V', 2: 'Ok'}
+labels_dict = {0: 'Rock', 1: 'Paper', 2: 'Scissors'}
 
 # Loop through each frame of the webcam
 while True:
@@ -50,6 +50,7 @@ while True:
                 y = hand_landmarks.landmark[i].y
                 data_aux.append(x)
                 data_aux.append(y)
+                data_aux.append(z)
                 x_.append(x)
                 y_.append(y)
 
