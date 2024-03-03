@@ -31,6 +31,7 @@ for dir_ in os.listdir(DATA_DIR):
             for landmark in hand_landmarks.landmark:
                 data_aux.append(landmark.x)  # Save landmark's x position
                 data_aux.append(landmark.y)  # Save landmark's y position
+                data_aux.append(landmark.z)  # Save landmark's z position
 
             # Save data and label in the respective arrays
             data.append(data_aux)
