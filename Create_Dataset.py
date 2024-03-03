@@ -1,12 +1,10 @@
 import os
-import mediapipe as mp
 import cv2
-import matplotlib.pyplot as plt
+import mediapipe as mp
 import pickle
 
+# Define relevant variables
 mp_hands = mp.solutions.hands
-mp_drawing = mp.solutions.drawing_utils
-mp_drawing_styles = mp.solutions.drawing_styles
 
 hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
 
@@ -14,24 +12,31 @@ DATA_DIR = '.\data'
 
 data = []
 labels = []
+
+# Loop through all folders inside the "data" folder (each folder has a different hand pose)
 for dir_ in os.listdir(DATA_DIR):
+    # Loop through all the images inside the folder
     for img_path in os.listdir(os.path.join(DATA_DIR, dir_)):
         data_aux = []
-        img = cv2.imread(os.path.join(DATA_DIR, dir_, img_path))
-        img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = cv2.imread(os.path.join(DATA_DIR, dir_, img_path))  # Save image in this variable
+        img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # Recolor image to RGB
 
-        results = hands.process(img_rgb)
-        if results.multi_hand_landmarks:
-            for hand_landmarks in results.multi_hand_landmarks:
-                for i in range(len(hand_landmarks.landmark)):
-                    x = hand_landmarks.landmark[i].x
-                    y = hand_landmarks.landmark[i].y
-                    data_aux.append(x)
-                    data_aux.append(y)
+        results = hands.process(img_rgb)  # Process image using mediapipe and save the data into this variable
 
+        # Check if only one hand is detected with 21 landmarks
+        if results.multi_hand_landmarks and len(results.multi_hand_landmarks) == 1 and len(results.multi_hand_landmarks[0].landmark) == 21:
+            hand_landmarks = results.multi_hand_landmarks[0]
+
+            # Iterate through each individual landmark
+            for landmark in hand_landmarks.landmark:
+                data_aux.append(landmark.x)  # Save landmark's x position
+                data_aux.append(landmark.y)  # Save landmark's y position
+
+            # Save data and label in the respective arrays
             data.append(data_aux)
             labels.append(dir_)
 
+# Use pickle to save the arrays as a file in other to use them in other scripts later
 f = open('data.pickle', 'wb')
-pickle.dump({'data': data, 'labels':labels}, f)
+pickle.dump({'data': data, 'labels': labels}, f)
 f.close()
