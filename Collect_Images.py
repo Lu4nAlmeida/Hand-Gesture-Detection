@@ -7,8 +7,8 @@ if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
 
 # Parameters
-number_of_classes = 14
-dataset_size = 200
+number_of_classes = 3
+dataset_size = 100
 
 # Loop for each hand pose chosen in "number_of_classes"
 cap = cv2.VideoCapture(0)
